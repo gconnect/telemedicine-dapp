@@ -1,9 +1,17 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { HashLink } from 'react-router-hash-link'
 import logo from '../../../assets/img/logo.png'
 
 import {Header, OpenMenu} from './Header.styles'
 
 const AppHeader = ({ appLinks }) => {
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const launchApp = () => {
+    navigate('/app');
+  };
 
   const openMenu = () => {
     const openMenu = document.getElementById('open-menu')
@@ -31,9 +39,16 @@ const AppHeader = ({ appLinks }) => {
         <img src={logo} alt="app logo"/>
       </Link>
       <ul>
-        {appLinks.map((link, i) => <li key={i}>
-          <Link to={link.link}>{link.title}</Link>
+        {/*<HashLink to="#contact">Contact</HashLink>*/}
+        {appLinks.map((link, i) => location.pathname !== '/app' && <li key={i}>
+          <HashLink smooth to={link.link}>{link.title}</HashLink>
         </li>)}
+        {location.pathname !== '/app' && <button onClick={launchApp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Launch App
+        </button>}
+        {location.pathname === '/app' && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Connect Wallet
+        </button>}
       </ul>
       <OpenMenu id="open-menu" onClick={openMenu}>
         <div className="bar1"></div>

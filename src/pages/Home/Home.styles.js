@@ -22,7 +22,7 @@ export const Hero = styled.div`
 `
 
 export const Flow = styled.div`
-  padding: 100px 20%;
+  padding: 100px 30px;
   background: #5C1A8D;
   color: #fefefe;
   
@@ -45,20 +45,13 @@ export const Flow = styled.div`
   }
   
   .flow-details {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
     align-items: center;
     
-    .steps {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      justify-content: space-between;
-      align-items: center;
-      
-      h2, p {
-        padding: 0 20px;
-      }
-    }
+
     
       @media (max-width: 768px) {
         display: grid;

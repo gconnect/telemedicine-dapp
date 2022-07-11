@@ -11,9 +11,12 @@ import AppDrawer from './components/layout/Drawer'
 
 function App() {
   const appLinks = [
-    { link: '/app', title: 'The App' },
-    { link: '/about', title: 'About Us' },
-    { link: '/contact', title: 'Get in Touch' }
+    { link: '/#patient', title: 'Patient' },
+    { link: '/#doctor', title: 'Doctor' },
+    { link: '/#pharmacist', title: 'Pharmacist' },
+    { link: '/#about', title: 'About Us' },
+    { link: '/#contact', title: 'Get in Touch' },
+    // { link: '/app', title: 'The App' }
   ]
   return (
     <Router>
@@ -28,8 +31,6 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/app' element={<TheApp/>}/>
-        <Route path='/about' element={<About/>}/>
-        <Route path='/contact' element={<Contact/>}/>
         <Route path='/*' element={<NotFound/>}/>
       </Routes>
       <AppFooter />
