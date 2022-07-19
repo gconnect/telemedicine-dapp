@@ -1,0 +1,9 @@
+require('dotenv').config({path: '../../.env'});
+
+const APPID = 99919213
+const CONTRACT_ADDRESS = "PRWV6JJADNV2QA4FO6L5HX7MGUYZXLAYW7ZHH5HYWHMHUMQQWKIM7UKHFQ"
+
+module.exports = {
+  APPID,
+  CONTRACT_ADDRESS,
+}
