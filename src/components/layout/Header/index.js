@@ -10,7 +10,7 @@ import { Header, OpenMenu } from './Header.styles'
 const peraWallet = new PeraWalletConnect();
 
 const AppHeader = ({ appLinks }) => {
-  const [accountAddress, setAccountAddress] = useState("Connect Wallet");
+  const [accountAddress, setAccountAddress] = useState(null);
   const isConnectedToPeraWallet = !!accountAddress;
 
   const location = useLocation()
