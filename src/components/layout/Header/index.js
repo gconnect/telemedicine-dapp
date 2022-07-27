@@ -1,13 +1,21 @@
+import React, {useEffect, useState} from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
 import logo from '../../../assets/img/logo.png'
+import Button from 'react-bootstrap/Button';
 
-import {Header, OpenMenu} from './Header.styles'
+import { PeraWalletConnect } from "@perawallet/connect";
+import { Header, OpenMenu } from './Header.styles'
+// Create the PeraWalletConnect instance outside of the component
+const peraWallet = new PeraWalletConnect();
 
 const AppHeader = ({ appLinks }) => {
+  const [accountAddress, setAccountAddress] = useState("Connect Wallet");
+  const isConnectedToPeraWallet = !!accountAddress;
 
   const location = useLocation()
   const navigate = useNavigate()
+  
 
   const launchApp = () => {
     navigate('/app');
@@ -33,6 +41,43 @@ const AppHeader = ({ appLinks }) => {
     sidebar.style.width = '0'
   }
 
+  useEffect(() => {
+    // Reconnect to the session when the component is mounted
+    peraWallet.reconnectSession().then((accounts) => {
+      // Setup the disconnect event listener
+      peraWallet.connector?.on("disconnect", handleDisconnectWalletClick);
+
+      if (accounts.length) {
+        setAccountAddress(accounts[0]);
+      }
+    });
+  }, []);
+  
+  function handleConnectWalletClick() {
+    peraWallet
+      .connect()
+      .then((newAccounts) => {
+        // Setup the disconnect event listener
+        peraWallet.connector?.on("disconnect", handleDisconnectWalletClick);
+
+        setAccountAddress(newAccounts[0]);
+      })
+      .reject((error) => {
+        // You MUST handle the reject because once the user closes the modal, peraWallet.connect() promise will be rejected.
+        // For the async/await syntax you MUST use try/catch
+        if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
+          // log the necessary errors
+        }
+      });
+    }
+
+  function handleDisconnectWalletClick() {
+    peraWallet.disconnect();
+
+    setAccountAddress(null);
+  }
+
+
   return (
     <Header className="app-mx">
       <Link to='/'>
@@ -43,12 +88,14 @@ const AppHeader = ({ appLinks }) => {
         {appLinks.map((link, i) => location.pathname !== '/app' && <li key={i}>
           <HashLink smooth to={link.link}>{link.title}</HashLink>
         </li>)}
-        {location.pathname !== '/app' && <button onClick={launchApp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        {location.pathname !== '/app' && <Button onClick={launchApp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Launch App
-        </button>}
-        {location.pathname === '/app' && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Connect Wallet
-        </button>}
+        </Button>}
+        {location.pathname === '/app' && <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"   onClick={
+        isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+        }>
+        {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
+        </Button>}
       </ul>
       <OpenMenu id="open-menu" onClick={openMenu}>
         <div className="bar1"></div>
