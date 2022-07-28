@@ -1,16 +1,21 @@
 
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AppDrawer } from './Drawer.styles'
 import Button from 'react-bootstrap/Button'
-import {useState} from "react";
+import React, {useState} from "react";
+import { HashLink } from 'react-router-hash-link'
 import { PeraWalletConnect } from "@perawallet/connect";
+import MyAlgoConnect from '@randlabs/myalgo-connect';
 
 const Drawer = ({ appLinks }) => {
   const [accountAddress, setAccountAddress] = useState(null);
   const isConnectedToPeraWallet = !!accountAddress;
+  const isConnectedToMyAlgoWallet = !!accountAddress
   const location = useLocation()
+  const navigate = useNavigate()
 
   const peraWallet = new PeraWalletConnect();
+  const myAlgoWallet = new MyAlgoConnect();
 
   function handleConnectWalletClick() {
     peraWallet
@@ -36,17 +41,47 @@ const Drawer = ({ appLinks }) => {
     setAccountAddress(null);
   }
 
+  // My Algowallet connect integration
+  /*Warning: Browser will block pop-up if user doesn't trigger myAlgoWallet.connect() with a button interation */
+  const connectToMyAlgo = async() => {
+    try {
+      const accounts = await myAlgoWallet.connect();
+      const addresses = accounts.map(account => account.address);
+      console.log(addresses)
+      setAccountAddress(addresses[0])
+      localStorage.setItem("address", addresses[0])
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function handleDisconnect() {
+    localStorage.clear("address")
+    setAccountAddress("");
+  }
+
+  const launchApp = () => {
+    navigate('/app');
+  };
+
   return (
     <AppDrawer id="sidebar">
       <ul>
         <li><Link to="/">Home</Link></li>
         {appLinks.map((link, i) => <li key={i}>
-          <Link to={link.link}>{link.title}</Link>
+          <HashLink smooth to={link.link}>{link.title}</HashLink>
+          {/*<Link to={link.link}>{link.title}</Link>*/}
         </li>)}
-        {location.pathname === '/app' && <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"   onClick={
-          isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+        {location.pathname !== '/app' && <Button onClick={launchApp}>
+          Launch App
+        </Button>}
+        {location.pathname === '/app' && <Button  onClick={
+          // isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+          isConnectedToMyAlgoWallet ? handleDisconnect : connectToMyAlgo
         }>
-          {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
+          {isConnectedToMyAlgoWallet ? "Disconnect" : "Connect to MyAlgo Wallet"}
+          {/* {isConnectedToMyAlgoWallet ? `${accountAddress.substring(0,10)}...` : "Connect Wallet"} */}
         </Button>}
       </ul>
     </AppDrawer>
