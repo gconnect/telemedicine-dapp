@@ -91,11 +91,11 @@ const AppHeader = ({ appLinks }) => {
         {location.pathname !== '/app' && <Button onClick={launchApp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Launch App
         </Button>}
-        {location.pathname === '/app' && <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"   onClick={
-        isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
-        }>
-        {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
-        </Button>}
+        {/*{location.pathname === '/app' && <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"   onClick={*/}
+        {/*isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick*/}
+        {/*}>*/}
+        {/*{isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}*/}
+        {/*</Button>}*/}
       </ul>
       <OpenMenu id="open-menu" onClick={openMenu}>
         <div className="bar1"></div>
