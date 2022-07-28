@@ -100,10 +100,10 @@ def approval_program():
   def insurer():
     return Seq([
       Assert(spendable_balance > Int(0)), 
-      get_account_balance_of_sender,
-      If(get_account_balance_of_sender.hasValue(), Return(Int(1))),
-      App.globalPut(Bytes("PatientBalance"), spendable_balance),
-      App.localPut(Int(0), Bytes("patient_balance"), spendable_balance),
+      # get_account_balance_of_sender,
+      # If(get_account_balance_of_sender.hasValue(), Return(Int(1))),
+      # App.globalPut(Bytes("PatientBalance"), spendable_balance),
+      # App.localPut(Int(0), Bytes("patient_balance"), spendable_balance),
       paymentTransaction(Txn.accounts[1], amount,),
       Approve()
   ])
@@ -118,7 +118,7 @@ def approval_program():
   program = Cond(
       [Txn.application_id() == Int(0), on_create],
       [Txn.on_completion() == OnComplete.NoOp, on_call],
-      [Txn.on_completion() == OnComplete.OptIn, Return(Int(1))],
+      # [Txn.on_completion() == OnComplete.OptIn, Return(Int(1))],
       [Txn.on_completion() == OnComplete.UpdateApplication, Return(creator)],
       [Txn.on_completion() == OnComplete.DeleteApplication, Return(creator)],
         [

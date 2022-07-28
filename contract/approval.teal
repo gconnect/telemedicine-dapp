@@ -2,23 +2,19 @@
 txn ApplicationID
 int 0
 ==
-bnz main_l22
+bnz main_l18
 txn OnCompletion
 int NoOp
 ==
-bnz main_l11
-txn OnCompletion
-int OptIn
-==
-bnz main_l10
+bnz main_l9
 txn OnCompletion
 int UpdateApplication
 ==
-bnz main_l9
+bnz main_l8
 txn OnCompletion
 int DeleteApplication
 ==
-bnz main_l8
+bnz main_l7
 txn OnCompletion
 int OptIn
 ==
@@ -26,10 +22,16 @@ txn OnCompletion
 int CloseOut
 ==
 ||
-bnz main_l7
+bnz main_l6
 err
-main_l7:
+main_l6:
 int 0
+return
+main_l7:
+txn Sender
+byte "Creator"
+app_global_get
+==
 return
 main_l8:
 txn Sender
@@ -38,33 +40,24 @@ app_global_get
 ==
 return
 main_l9:
-txn Sender
-byte "Creator"
-app_global_get
-==
-return
-main_l10:
-int 1
-return
-main_l11:
 txna ApplicationArgs 0
 byte "patient"
 ==
-bnz main_l21
+bnz main_l17
 txna ApplicationArgs 0
 byte "doctor"
 ==
-bnz main_l20
+bnz main_l16
 txna ApplicationArgs 0
 byte "pharmacist"
 ==
-bnz main_l19
+bnz main_l15
 txna ApplicationArgs 0
 byte "insurer"
 ==
-bnz main_l16
+bnz main_l14
 err
-main_l16:
+main_l14:
 txna Accounts 3
 balance
 txn Sender
@@ -73,60 +66,34 @@ min_balance
 int 0
 >
 assert
-int 0
-global CurrentApplicationID
-byte "patient_balance"
-app_local_get_ex
-store 1
-store 0
-load 1
-bnz main_l18
-byte "PatientBalance"
-txna Accounts 3
-balance
-txn Sender
-min_balance
--
-app_global_put
-int 0
-byte "patient_balance"
-txna Accounts 3
-balance
-txn Sender
-min_balance
--
-app_local_put
 txna Accounts 1
 txna ApplicationArgs 1
 btoi
 callsub paymentTransaction_0
 int 1
 return
-main_l18:
-int 1
-return
-main_l19:
+main_l15:
 txna Accounts 2
 txna ApplicationArgs 1
 btoi
 callsub paymentTransaction_0
 int 1
 return
-main_l20:
+main_l16:
 txna Accounts 1
 txna ApplicationArgs 1
 btoi
 callsub paymentTransaction_0
 int 1
 return
-main_l21:
+main_l17:
 txna Accounts 0
 txna ApplicationArgs 1
 btoi
 callsub paymentTransaction_0
 int 1
 return
-main_l22:
+main_l18:
 byte "Creator"
 txn Sender
 app_global_put
@@ -144,8 +111,8 @@ return
 
 // paymentTransaction
 paymentTransaction_0:
-store 3
-store 2
+store 1
+store 0
 global GroupSize
 int 2
 ==
@@ -165,9 +132,9 @@ assert
 itxn_begin
 int pay
 itxn_field TypeEnum
-load 2
+load 0
 itxn_field Receiver
-load 3
+load 1
 itxn_field Amount
 int 0
 itxn_field Fee
