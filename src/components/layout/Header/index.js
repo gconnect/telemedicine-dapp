@@ -1,17 +1,41 @@
-import React, {useEffect, useState} from 'react'
+/*global AlgoSigner*/
+
+import React, {useEffect, useState, useRef} from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
+import { PeraWalletConnect } from "@perawallet/connect";
+import MyAlgoConnect from '@randlabs/myalgo-connect';
 import logo from '../../../assets/img/logo.png'
 import Button from 'react-bootstrap/Button';
-
-import { PeraWalletConnect } from "@perawallet/connect";
 import { Header, OpenMenu } from './Header.styles'
 // Create the PeraWalletConnect instance outside of the component
 const peraWallet = new PeraWalletConnect();
+const myAlgoWallet = new MyAlgoConnect();
 
 const AppHeader = ({ appLinks }) => {
   const [accountAddress, setAccountAddress] = useState(null);
   const isConnectedToPeraWallet = !!accountAddress;
+  const isConnectedToMyAlgoWallet = !!accountAddress
+  const userAccount = useRef()
+
+
+  // Connect with AlgoSigner
+  const connectWithAlgoSigner = async () =>{
+    let resp = await AlgoSigner.connect()
+        console.log(resp)
+        getUserAccount()
+  }
+  const getUserAccount = async () =>{
+    userAccount.current =  await AlgoSigner.accounts({
+         ledger: 'TestNet'
+       })
+       setAccountAddress(userAccount.current[0]['address'].substring(0,14) + "...")
+    // console.log(userAccount.current[0]['address'])
+    console.log(userAccount.current)
+    localStorage.setItem("address", userAccount.current[0]['address'])
+
+
+ }
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -41,17 +65,37 @@ const AppHeader = ({ appLinks }) => {
     sidebar.style.width = '0'
   }
 
+  // My Algowallet connect integration
+/*Warning: Browser will block pop-up if user doesn't trigger myAlgoWallet.connect() with a button interation */
+  const connectToMyAlgo = async() => {
+    try {
+      const accounts = await myAlgoWallet.connect();
+      const addresses = accounts.map(account => account.address);
+      console.log(addresses)
+      setAccountAddress(addresses[0])
+      localStorage.setItem("address", addresses[0])
+      
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+//Perawallet connect integration
   useEffect(() => {
+    const value = localStorage.getItem("address")
+    if(value){
+      setAccountAddress(value)
+    }
     // Reconnect to the session when the component is mounted
     peraWallet.reconnectSession().then((accounts) => {
       // Setup the disconnect event listener
       peraWallet.connector?.on("disconnect", handleDisconnectWalletClick);
-
       if (accounts.length) {
         setAccountAddress(accounts[0]);
+        localStorage.setItem("address", accounts[0])
       }
     });
-  }, []);
+  }, [isConnectedToMyAlgoWallet, accountAddress]);
   
   function handleConnectWalletClick() {
     peraWallet
@@ -73,10 +117,13 @@ const AppHeader = ({ appLinks }) => {
 
   function handleDisconnectWalletClick() {
     peraWallet.disconnect();
-
     setAccountAddress(null);
   }
 
+  function handleDisconnect() {
+    localStorage.clear("address")
+    setAccountAddress("");
+  }
 
   return (
     <Header className="app-mx">
@@ -88,13 +135,15 @@ const AppHeader = ({ appLinks }) => {
         {appLinks.map((link, i) => location.pathname !== '/app' && <li key={i}>
           <HashLink smooth to={link.link}>{link.title}</HashLink>
         </li>)}
-        {location.pathname !== '/app' && <Button onClick={launchApp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        {location.pathname !== '/app' && <Button onClick={launchApp}>
           Launch App
         </Button>}
-        {location.pathname === '/app' && <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"   onClick={
-        isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+        {location.pathname === '/app' && <Button  onClick={
+        // isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+          isConnectedToMyAlgoWallet ? handleDisconnect : connectToMyAlgo
         }>
-        {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
+        {isConnectedToMyAlgoWallet ? "Disconnect" : "Connect to MyAlgo Wallet"}
+        {/* {isConnectedToMyAlgoWallet ? `${accountAddress.substring(0,10)}...` : "Connect Wallet"} */}
         </Button>}
       </ul>
       <OpenMenu id="open-menu" onClick={openMenu}>
