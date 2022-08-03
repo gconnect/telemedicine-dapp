@@ -5,6 +5,13 @@ import { Animated } from 'react-animated-css'
 import { Button, Container } from 'react-bootstrap'
 import TransactionHistoryTable from './TransactionHistoryTable'
 import FormModal from './FormModal'
+import { StyleSheet, css } from 'aphrodite'
+
+const styles = StyleSheet.create({
+  btn: {
+    margin: '0 10px'
+  }
+})
 
 const TheApp = () => {
   let location = useLocation()
@@ -29,8 +36,17 @@ const TheApp = () => {
       <div className="min-height">
 
         <div>
-          <Button onClick={() => setShowModal(true)}>
-            Consult Doctor
+          <Button className={css(styles.btn)} variant="warning" onClick={() => setShowModal(true)}>
+            Patient
+          </Button>
+          <Button className={css(styles.btn)} variant="info" onClick={() => setShowModal(true)}>
+            Doctor
+          </Button>
+          <Button className={css(styles.btn)} onClick={() => setShowModal(true)}>
+            Pharmacist
+          </Button>
+          <Button className={css(styles.btn)} variant="success" onClick={() => setShowModal(true)}>
+            Insurer
           </Button>
           {showModal ? <FormModal show={showModal} onHide= {() => handleClose()} /> : null }        
         </div>

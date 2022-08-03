@@ -40,7 +40,7 @@ async function appCall(caller_addr, receiver, msg) {
         const closeRemainderTo = undefined;
         const revocationTarget = undefined;
         let appArgs = [];
-        let amount = 2
+        let amount = 0
         let message = msg
         let note = new TextEncoder().encode(message);
         let lease = undefined
@@ -86,6 +86,7 @@ async function appCall(caller_addr, receiver, msg) {
         }
 
         const signedTxns = await myAlgoWallet.signTransaction(txArr.map(txn => txn.toByte()));
+        console.log(signedTxns)
         const response = await algodClient.sendRawTransaction(signedTxns.map(tx => tx.blob)).do();
         console.log(response)
 

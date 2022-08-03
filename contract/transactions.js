@@ -59,7 +59,7 @@ async function paymentTransaction(message, senderAccount, receiverAddress, amt) 
         // console.log("Transaction information: %o", mytxinfo);
         let string = new TextDecoder().decode(confirmedTxn.txn.txn.note);
         console.log("Note field: ", string);
-        accountInfo = await algodClient.accountInformation(myAccount.addr).do();
+        const accountInfo = await algodClient.accountInformation(myAccount.addr).do();
         console.log("Transaction Amount: %d microAlgos", confirmedTxn.txn.txn.amt);        
         console.log("Transaction Fee: %d microAlgos", confirmedTxn.txn.txn.fee);
         console.log("Account balance: %d microAlgos", accountInfo.amount);
