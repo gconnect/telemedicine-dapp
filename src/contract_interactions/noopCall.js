@@ -11,7 +11,7 @@ const peraWallet = new PeraWalletConnect();
 const myAlgoWallet = new MyAlgoConnect();
 
 
-async function appCall(caller_addr, receiver, msg) {
+async function appCall(caller_addr, receiver, msg, amt) {
  
   // await AlgoSigner.connect();
   // userAccount.current =  await AlgoSigner.accounts({
@@ -35,16 +35,16 @@ async function appCall(caller_addr, receiver, msg) {
         let accounts = [receiver];
         let foreignApps = undefined;
         let foreignAssets = undefined;
-        const rekeyTo = algosdk.getApplicationAddress(APPID)
+        // const rekeyTo = algosdk.getApplicationAddress(APPID)
         let appID = APPID //update
-        const closeRemainderTo = undefined;
-        const revocationTarget = undefined;
+        // const closeRemainderTo = undefined;
+        // const revocationTarget = undefined;
         let appArgs = [];
-        let amount = 0
+        let amount = +amt
         let message = msg
         let note = new TextEncoder().encode(message);
         let lease = undefined
-        appArgs.push(EncodeBytes("doctor"), encodeUint64(amount),);
+        appArgs.push(EncodeBytes("payment"), encodeUint64(amount),);
 
         const paymentTransfer = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
             from: caller_addr,

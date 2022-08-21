@@ -4,6 +4,7 @@ import { Modal, Form, Button, Alert } from "react-bootstrap"
 import  optin  from "../../contract_interactions/optin"
 import appCall from "../../contract_interactions/noopCall"
 import { StyleSheet, css } from 'aphrodite'
+import { DOCTOR, PHARMACIST, INSURER } from "../../constants"
 
 export default function FormModal(props){
   const userAccount = useRef()
@@ -12,9 +13,10 @@ export default function FormModal(props){
   const [walletAddress, setWalletAddrss] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const [errorAddress, setErrorAddress] = useState("")
+  const [amount, setAmount] = useState(0)
 
-  const getAddress = localStorage.getItem("address")
-  console.log(getAddress)
+  const accountAddress = localStorage.getItem("address")
+  console.log(accountAddress)
 
 
 const styles = StyleSheet.create({
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
   console.log(e.target.value)
 }
 
+const handleAmountChange = e =>{
+  setAmount(e.target.value)
+  console.log(amount)
+}
+
   const handleTransfer = async () => {
   //  const appOptin = await optin(getAddress)
   //    console.log(appOptin)
@@ -49,9 +56,13 @@ const styles = StyleSheet.create({
     else if(message !=="" || walletAddress.length === 32){
       setErrorMessage("")
       setErrorAddress("")
-      const callApp = await appCall(getAddress, walletAddress, message)
+      if(accountAddress === INSURER){
+          await appCall(accountAddress, walletAddress, message, amount)
+      }else{
+          await appCall(accountAddress, walletAddress, message, 0)
+      }
       props.onHide()
-      console.log(callApp)
+      // console.log(callApp)
     }
   }
 
@@ -71,7 +82,6 @@ const styles = StyleSheet.create({
                 autoFocus
                 onChange={handleMessageChange}
                 value={message}
-                maxLength= {50}
                 required
               />
               <label className={css(styles.error)}>{errorMessage}</label>
@@ -88,9 +98,21 @@ const styles = StyleSheet.create({
               />
               <label className={css(styles.error)}>{errorAddress}</label>
             </Form.Group>
+            { accountAddress === INSURER ? <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Amount</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="amount"
+                autoFocus
+                onChange={handleAmountChange}
+                value = {amount}
+                required
+              />
+            </Form.Group> : null}
+            
 
             <Button variant="primary" onClick={handleTransfer}>
-            Book Appointment
+            {props.buttonText}
           </Button>
           </Form>
         </Modal.Body>

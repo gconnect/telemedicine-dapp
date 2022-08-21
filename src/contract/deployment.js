@@ -1,4 +1,4 @@
-require('dotenv').config({path: '../.env'})
+require('dotenv').config({path: '../../.env'})
 const algosdk = require('algosdk');
 const { getApplicationAddress } = require('algosdk');
 const fs = require("fs");
@@ -31,10 +31,12 @@ async function deployApp(){
         const localBytes = 0;
         const globalInts = 10;
         const globalBytes = 10;
-
-        const accounts = [process.env.REACT_APP_DOCTOR_ADDRESS, process.env.REACT_APP_PHARMACIST_ADDRESS, process.env.REACT_APP_INSURANCE_ADDRESS];
+        const DOCTOR = "PI634P3PGBOFCDSINZ7OOJBHTCBWJUVDAWWNVBKEICZRXUHD5A7O7MAX4M"
+        const PHARMACIST = "4YX2KADOTQ337AJ4AQZOHNF4H5INMVVDXFXSW7JZMODBXHRRMLMW6KI5SU"
+        const INSURER = "44DY7ZJ5XBSTMZ4K2AYRKS7Q2ECBPQZ24NWUC2OE4XIWPAQGOQYFCKZYMI"
+        const accounts = [DOCTOR, PHARMACIST, INSURER];
         const foreignApps = undefined;
-        const foreignAssets = undefined; //First value is wNGN token & Second is wGHC for testing purposes..
+        const foreignAssets = undefined; 
 
         const appArgs = undefined;
     

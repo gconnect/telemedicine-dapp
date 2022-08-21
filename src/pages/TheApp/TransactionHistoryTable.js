@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap"
 import { StyleSheet, css } from 'aphrodite'
 import { Buffer } from 'buffer';
 import axios from "axios"
+import emptyImage from "../../assets/img/empty.svg"
 
 const styles = StyleSheet.create({
   table: {
@@ -12,43 +13,26 @@ const styles = StyleSheet.create({
   },
   title: {
     margin: '20px 0'
-  }
+  },
+  empty: {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '50%'
+  },
 })
 
 export default function TransactionHistoryTable() {
   // const url = "https://indexer.testnet.algoexplorerapi.io/v2/transactions?limit=50&address=IQ7UESMB2RHOGCBXJP5S3KZUDLTSGSTKLPSS4DDFZHVXNYAZRBFYV4EWRM&sort=desc"
   const url = "https://indexer.testnet.algoexplorerapi.io/v2/transactions?limit=50&address="
   const address = localStorage.getItem("address")
-  const [transactions, setTransactions] = useState([])
-  const [set, setTest] = useState([])
+  const [transactions, setTransactions] = useState([])  
 
   const getTransactionHistory = async () => {
    const response = await axios.get(`${url}${address}&sort=desc`)
    const data = response.data.transactions
    setTransactions(data)
-  //  const innerTrans = data[0]["inner-txns"][0]['payment-transaction'].receiver
-  //  console.log(innerTrans)
-  let items = []
-  data.forEach(item => {
-    if (item.hasOwnProperty('inner-txns')) {
-      item['inner-txns'].forEach(inner => {
-        if (inner.hasOwnProperty('payment-transaction')) {
-          items.push(inner['payment-transaction'])
-        }
-      })
-    }
-    
-  })
-
-  data.forEach(item => {
-    if (item.hasOwnProperty('payment-transaction')) {
-      items.push(item['payment-transaction'])
-    }
-  })
-
-
-  setTest(items)
-   return data
+   localStorage.setItem("transactions", data)
   }
 
   const base64ToString =(str) =>{
@@ -61,11 +45,12 @@ export default function TransactionHistoryTable() {
 
   useEffect(() =>{
     getTransactionHistory()
-  }, [])
+  }, [transactions])
 
   return(
       <div>
          <h4 className={css(styles.title)}>Transaction History</h4>
+        { transactions.length < 1 ? <img className={css(styles.empty)} src={emptyImage} width="50px" alt="empty" /> :
          <div class="table-responsive">
           <Table className={css(styles.table)} striped bordered hover  size="sm">
             <thead>
@@ -78,22 +63,29 @@ export default function TransactionHistoryTable() {
               </tr>
             </thead>
             <tbody>
-            {transactions.map((item, index) =>
-                <tr className={css(styles.table)}>
-                <td>{item.id}</td>
-                <td>{item['confirmed-round']}</td>
-                <td>{base64ToString(item.note)}</td>
-                <td>{item.sender}</td>
-                <td>{item.sender}</td>
-                </tr>              
-              // {/* {  transactions[index]["inner-txns"][index]['payment-transaction'].map((inner) => <td>{inner.receiver}</td>)} */}
-              // {/* {item['inner-txns'].map((trans) =>
-              // <td>{trans['payment-transaction'].receiver}</td>
-              // )} */}
+              
+            {transactions.map((txn, index) =>
+              txn.hasOwnProperty('inner-txns') ?
+              txn['inner-txns'].map(item => {
+                if (item.hasOwnProperty('payment-transaction')) {
+                  return <tr key={index}  className={css(styles.table)}>
+                  <td> <a href={`https://testnet.algoexplorer.io/tx/${txn.id}`} target="_blank" rel="noreferrer">{txn.id === null ? null : `${txn.id.substring(0,40)}...`}</a></td>
+                  <td>{txn['confirmed-round']}</td>
+                  <td>{base64ToString(txn.note)}</td>
+                  <td>{txn.sender === null ? null : `${txn.sender.substring(0,20)}...`}</td>    
+                  <td>{item['payment-transaction']['receiver'] === null ? null 
+                  : `${item['payment-transaction']['receiver'].substring(0,20)}...`}</td>          
+                  </tr> 
+                } else {
+                  return null
+                }
+              }) : null
+                           
             )}
             </tbody>
           </Table>
          </div>
+         }
       </div>
       
   )

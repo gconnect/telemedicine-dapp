@@ -1,8 +1,8 @@
 require('dotenv').config({path: '../.env'})
 const { encodeUint64 } = require('algosdk');
 const algosdk = require('algosdk');
-const { APPID } = require("../constants")
-const EncodeBytes = require("../utils")
+const { APPID } = require("../../constants")
+const EncodeBytes = require("../../utils")
 
 async function appCall() {
 

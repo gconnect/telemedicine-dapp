@@ -14,7 +14,7 @@ const myAlgoWallet = new MyAlgoConnect();
 
 const AppHeader = ({ appLinks }) => {
   const [accountAddress, setAccountAddress] = useState(null);
-  const isConnectedToPeraWallet = !!accountAddress;
+  // const isConnectedToPeraWallet = !!accountAddress;
   const isConnectedToMyAlgoWallet = !!accountAddress
   const userAccount = useRef()
 
@@ -29,12 +29,11 @@ const AppHeader = ({ appLinks }) => {
     userAccount.current =  await AlgoSigner.accounts({
          ledger: 'TestNet'
        })
+       console.log(userAccount)
        setAccountAddress(userAccount.current[0]['address'].substring(0,14) + "...")
     // console.log(userAccount.current[0]['address'])
     console.log(userAccount.current)
     localStorage.setItem("address", userAccount.current[0]['address'])
-
-
  }
 
   const location = useLocation()
@@ -69,12 +68,16 @@ const AppHeader = ({ appLinks }) => {
 /*Warning: Browser will block pop-up if user doesn't trigger myAlgoWallet.connect() with a button interation */
   const connectToMyAlgo = async() => {
     try {
-      const accounts = await myAlgoWallet.connect();
+      const accounts = await myAlgoWallet.connect({
+        shouldSelectOneAccount: true,
+        openManager: true,
+      });
       const addresses = accounts.map(account => account.address);
       console.log(addresses)
       setAccountAddress(addresses[0])
       localStorage.setItem("address", addresses[0])
-      
+      window.location.reload()
+      return addresses[0];
     } catch (err) {
       console.error(err);
     }
@@ -123,6 +126,7 @@ const AppHeader = ({ appLinks }) => {
   function handleDisconnect() {
     localStorage.clear("address")
     setAccountAddress("");
+    window.location.reload()
   }
 
   return (
@@ -142,7 +146,7 @@ const AppHeader = ({ appLinks }) => {
         // isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
           isConnectedToMyAlgoWallet ? handleDisconnect : connectToMyAlgo
         }>
-        {isConnectedToMyAlgoWallet ? "Disconnect" : "Connect to MyAlgo Wallet"}
+        {isConnectedToMyAlgoWallet ? "Disconnect" : "Connect Wallet"}
         {/* {isConnectedToMyAlgoWallet ? `${accountAddress.substring(0,10)}...` : "Connect Wallet"} */}
         </Button>}
       </ul>
