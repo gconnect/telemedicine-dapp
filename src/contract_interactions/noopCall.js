@@ -1,44 +1,31 @@
 /*global AlgoSigner*/
 
-import {PeraWalletConnect} from "@perawallet/connect";
+import { PeraWalletConnect } from "@perawallet/connect";
 // Create the PeraWalletConnect instance outside of the component
 import MyAlgoConnect from '@randlabs/myalgo-connect';
 import { encodeUint64 } from 'algosdk';
 import algosdk  from 'algosdk';
 import { APPID } from "../constants"
 import { EncodeBytes }  from "../utils"
+import { ALGOD_SERVER, PORT } from "../constants"
 const peraWallet = new PeraWalletConnect();
 const myAlgoWallet = new MyAlgoConnect();
 
-
 async function appCall(caller_addr, receiver, msg, amt) {
- 
-  // await AlgoSigner.connect();
-  // userAccount.current =  await AlgoSigner.accounts({
-  //     ledger: 'TestNet'
-  //   })
- 
 
     try {
       const token = {"X-API-Key": process.env.REACT_APP_API_KEY}
-      const base_server = process.env.REACT_APP_ALGOD_SERVER
-      const port = process.env.REACT_APP_PORT
+      const base_server = ALGOD_SERVER
+      const port = PORT
       const algodClient = new algosdk.Algodv2(token, base_server, port);
         let suggestedParams = await algodClient.getTransactionParams().do();
         suggestedParams.fee = 2000
         suggestedParams.flatFee = true;
 
-        // const mnemonic = sender
-        // let caller = algosdk.mnemonicToSecretKey(mnemonic);
-        // let caller_addr = caller.addr;
-        
         let accounts = [receiver];
         let foreignApps = undefined;
         let foreignAssets = undefined;
-        // const rekeyTo = algosdk.getApplicationAddress(APPID)
         let appID = APPID //update
-        // const closeRemainderTo = undefined;
-        // const revocationTarget = undefined;
         let appArgs = [];
         let amount = +amt
         let message = msg
