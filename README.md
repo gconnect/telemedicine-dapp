@@ -37,8 +37,7 @@ To test the code
 
 # Demo
 
-
-Here is a [demo link]() to the deployed Application on vercel.
+Here is a [demo link](telemedicine-dapp.vercel.app) to the deployed Application on vercel.
 
 # License
 Distributed under the MIT License. See for more information. [LICENSE](https://github.com/gconnect/telemedicine-dapp/blob/master/LICENSE)
