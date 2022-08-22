@@ -41,7 +41,7 @@ To test the code
 Here is a [demo link]() to the deployed Application on vercel.
 
 # License
-Distributed under the MIT License. See for more information. [LICENSE](https://github.com/gconnect/pyeal-token-swap/blob/master/LICENSE)
+Distributed under the MIT License. See for more information. [LICENSE](https://github.com/gconnect/telemedicine-dapp/blob/master/LICENSE)
 
 # Blog and Video Tutorial
 For more details you can checkout the link to the [youtube demo]()
