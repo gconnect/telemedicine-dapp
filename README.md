@@ -43,7 +43,7 @@ Here is a [demo link](telemedicine-dapp.vercel.app) to the deployed Application 
 Distributed under the MIT License. See for more information. [LICENSE](https://github.com/gconnect/telemedicine-dapp/blob/master/LICENSE)
 
 # Blog and Video Tutorial
-For more details you can checkout the link to the [youtube demo]()
+For more details you can checkout the link to the [youtube demo](https://youtu.be/bUxi5NaAXEI)
 
 # Warning
 This project is not audited and should not be used in a production environment.
