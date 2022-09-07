@@ -8,8 +8,30 @@ import algosdk  from 'algosdk';
 import { APPID } from "../constants"
 import { EncodeBytes }  from "../utils"
 import { ALGOD_SERVER, PORT } from "../constants"
+import axios from "axios";
 const peraWallet = new PeraWalletConnect();
 const myAlgoWallet = new MyAlgoConnect();
+
+const slackCall = async (message) => {
+  const slackWebHookUrl = "https://hooks.slack.com/services/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"
+  const slackBody = {
+    type: "mrkdwn",
+    text: message
+  }
+  try{
+    const response = await axios.post(slackWebHookUrl, JSON.stringify(slackBody), {
+      withCredentials: false,
+      transformRequest: [(data, headers) => {
+        delete headers.post["Content-Type"]
+        return data
+      }]
+    })
+    console.log(` slack call ${response}`)
+
+  }catch(err){
+
+  }
+}
 
 async function appCall(caller_addr, receiver, msg, amt) {
 
@@ -77,6 +99,8 @@ async function appCall(caller_addr, receiver, msg, amt) {
         const response = await algodClient.sendRawTransaction(signedTxns.map(tx => tx.blob)).do();
         console.log(response)
 
+        slackCall(`Transaction Successful \n Amount: ${amt} \n TxID: ${response.txId}`)
+
         // AlgoSigner implementation
         // algosdk.assignGroupID([paymentTransfer, callContract]);
 
@@ -95,7 +119,10 @@ async function appCall(caller_addr, receiver, msg, amt) {
     }
     catch (err) {
         console.log("err", err);
+        slackCall(`**Transaction Failed ** \n ErrorMessage: ${JSON.stringify(err)}`)
+
     }
 };
+
 
 export default appCall;

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function TransactionHistoryTable() {
+export default function TransactionHistoryTable({currentItems}) {
   // const url = "https://indexer.testnet.algoexplorerapi.io/v2/transactions?limit=50&address=IQ7UESMB2RHOGCBXJP5S3KZUDLTSGSTKLPSS4DDFZHVXNYAZRBFYV4EWRM&sort=desc"
   const url = "https://indexer.testnet.algoexplorerapi.io/v2/transactions?limit=50&address="
   const address = localStorage.getItem("address")

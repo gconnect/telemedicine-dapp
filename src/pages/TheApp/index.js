@@ -8,6 +8,7 @@ import FormModal from './FormModal'
 import { StyleSheet, css } from 'aphrodite'
 import  { DOCTOR, PHARMACIST, INSURER } from "../../constants"
 import connectImage from "../../assets/img/connect.svg"
+import PaginatedItems from './PaginateItems'
 
 const styles = StyleSheet.create({
   btn: {
@@ -89,7 +90,10 @@ const TheApp = () => {
             <h3 className={css(styles.emptyText)}>Please connect your wallet to get started</h3>
           </div> 
             :
-          <TransactionHistoryTable/> 
+            <div id="container">
+              <TransactionHistoryTable/> 
+              {/* <PaginatedItems currentItems={2}/> */}
+            </div>
         }
       </div>
     </Animated>
