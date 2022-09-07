@@ -13,7 +13,7 @@ const peraWallet = new PeraWalletConnect();
 const myAlgoWallet = new MyAlgoConnect();
 
 const slackCall = async (message) => {
-  const slackWebHookUrl = "https://hooks.slack.com/services/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"
+  const slackWebHookUrl = `https://hooks.slack.com/services/${process.env.REACT_APP_SLACK_HOOK}`
   const slackBody = {
     type: "mrkdwn",
     text: message
@@ -119,7 +119,7 @@ async function appCall(caller_addr, receiver, msg, amt) {
     }
     catch (err) {
         console.log("err", err);
-        slackCall(`**Transaction Failed ** \n ErrorMessage: ${JSON.stringify(err)}`)
+        slackCall(`Transaction Failed \n ErrorMessage: ${JSON.stringify(err)}`)
 
     }
 };
