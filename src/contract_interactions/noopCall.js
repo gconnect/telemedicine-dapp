@@ -99,7 +99,7 @@ async function appCall(caller_addr, receiver, msg, amt) {
         const response = await algodClient.sendRawTransaction(signedTxns.map(tx => tx.blob)).do();
         console.log(response)
 
-        slackCall(`Transaction Successful \n Amount: ${amt} \n TxID: ${response.txId}`)
+        slackCall(`Transaction Successful \n Amount: ${amt} \n TxID: ${signedTxns[1].txID}`)
 
         // AlgoSigner implementation
         // algosdk.assignGroupID([paymentTransfer, callContract]);
