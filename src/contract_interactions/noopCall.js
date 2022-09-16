@@ -27,7 +27,7 @@ const slackCall = async (message) => {
       }]
     })
     console.log(` slack call ${response}`)
-
+    return response
   }catch(err){
 
   }
