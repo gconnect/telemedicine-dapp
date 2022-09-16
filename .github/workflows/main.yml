@@ -24,5 +24,5 @@ jobs:
     steps:
       - name: Call our API route
         run: |
-          --url './src/cronjob.js' \
+          echo './src/cronjob.js' \
         
