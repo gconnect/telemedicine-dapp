@@ -1,20 +1,4 @@
-# name: Master
-# on:
-#   push:
-#     branches:
-#       - master
-#     schedule:
-#       - cron: '*/5 * * * *' 
-#   jobs:
-#     build:
-#       runs-on: ubuntu-latest
-#       steps:
-#       - uses: actions/checkout@v1
-#       - name: Running
-#         run: |
-#           echo "./src/cronjob.js"
-
-name: daily-cron
+name: daily-tvl-update
 on:
   schedule:
     - cron: '*/5 * * * *'
@@ -24,7 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: actions/setup-axios@v3
         with:
           node-version: '16.17.0'
       - name: Install node dependencies
