@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call our API route
-        run: node ./cronjob.js
+        run: |
+          url "../../cronjob.js"
           
         
