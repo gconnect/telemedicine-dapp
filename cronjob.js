@@ -15,7 +15,7 @@ const axios =  require("axios")
         }]
       })
       console.log(` slack call ${response}`)
-  
+      return response
     }catch(err){
   
     }
@@ -41,7 +41,5 @@ const axios =  require("axios")
       console.error(error)
     }
   }
-
-
 
   getTVL()
