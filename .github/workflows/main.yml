@@ -27,8 +27,9 @@ jobs:
       - uses: actions/setup-axios@v3
         with:
           node-version: '16.17.0'
-          axios-version: '^0.27.2' 
-      - name: Run node file
+      - name: Install node dependencies
+        run: npm install
+      - name: Run TVL file
         run: |
           node cronjob.js
           

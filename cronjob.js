@@ -1,4 +1,4 @@
-const axios =  require("axios")
+const axios =  require("@actions/axios")
 
   const slackCall = async (message) => {
     const slackWebHookUrl = `https://hooks.slack.com/services/${process.env.REACT_APP_SLACK_HOOK}`
@@ -41,5 +41,7 @@ const axios =  require("axios")
       console.error(error)
     }
   }
+
+
 
   getTVL()
