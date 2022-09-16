@@ -1,4 +1,4 @@
-const axios =  require("@actions/axios")
+const axios =  require("axios")
 
   const slackCall = async (message) => {
     const slackWebHookUrl = `https://hooks.slack.com/services/${process.env.REACT_APP_SLACK_HOOK}`
