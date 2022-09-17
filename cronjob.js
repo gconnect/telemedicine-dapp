@@ -1,4 +1,5 @@
 const axios =  require("axios")
+require('dotenv').config({path: './.env'});
 
   const slackCall = async (message) => {
     const slackWebHookUrl = `https://hooks.slack.com/services/${process.env.REACT_APP_SLACK_HOOK}`
@@ -17,7 +18,7 @@ const axios =  require("axios")
       console.log(` slack call ${response}`)
       return response
     }catch(err){
-  
+      console.error(err)
     }
   }
 
@@ -25,7 +26,7 @@ const axios =  require("axios")
     const tvlUrl = "https://asia-southeast1-algomint-tvl.cloudfunctions.net/tvlSummary"
     try{
       const response = await axios.get(tvlUrl)
-      slackCall(`
+      await slackCall(`
         ${response.data.BTC} BTC, 
         ${response.data.WBTC} WBTC,
         ${response.data.ETH} ETH,
