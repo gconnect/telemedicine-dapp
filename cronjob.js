@@ -18,7 +18,7 @@ const getTVL = async() => {
 
     const slackBody = {
       type: "mrkdwn",
-      text: ` ${parseFloat(tvlData.BTC).toFixed(2)} BTC, ${parseFloat(tvlData.WBTC).toFixed(2)} WBTC, ${parseFloat(tvlData.ETH).toFixed(2)} ETH, ${parseFloat(tvlData.SIPLP).toFixed(2)} goUSD/USDC LP, ${parseFloat(tvlData.USDC).toFixed(2)} USDC, ${parseFloat(tvlData.goBTC).toFixed(2)} goBTC, ${parseFloat(tvlData.goETH).toFixed(2)} goETH, ${parseFloat(tvlData.goUSD).toFixed(2)} goUSD,`
+      text: ` ${parseFloat(tvlData.BTC).toFixed(2)} BTC, ${parseFloat(tvlData.WBTC).toFixed(2)} WBTC, ${parseFloat(tvlData.ETH).toFixed(2)} ETH, ${parseFloat(tvlData.SIPLP).toFixed(2)} goUSD/USDC LP, ${parseFloat(tvlData.USDC).toFixed(2)} USDC, ${parseFloat(tvlData.goBTC).toFixed(2)} goBTC, ${parseFloat(tvlData.goETH).toFixed(2)} goETH, ${parseFloat(tvlData.goUSD).toFixed(2)} goUSD`
     }
     try{
       await axios.post(slackWebHookUrl, JSON.stringify(slackBody), {
