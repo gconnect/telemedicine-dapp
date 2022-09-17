@@ -11,7 +11,7 @@ const getTVL = async() => {
   }
 }
   const slackMessage = async () => {
-    const slackWebHookUrl = `https://hooks.slack.com/services/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`
+    const slackWebHookUrl = `https://hooks.slack.com/services/${process.env.SLACK_HOOK}`
 
     const tvlData = await getTVL()
     console.log(tvlData)
