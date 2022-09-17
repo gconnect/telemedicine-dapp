@@ -17,3 +17,5 @@ jobs:
       - name: Run TVL file
         run: |
           node cronjob.js
+        env:
+          SLACK_HOOK: ${{ secrets.SLACK_HOOK }}
