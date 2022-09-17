@@ -27,14 +27,7 @@ require('dotenv').config({path: './.env'});
     try{
       const response = await axios.get(tvlUrl)
       await slackCall(`
-        ${response.data.BTC} BTC, 
-        ${response.data.WBTC} WBTC,
-        ${response.data.ETH} ETH,
-        ${response.data.SIPLP} goUSD/USDC LP,
-        ${response.data.USDC} USDC,
-        ${response.data.goBTC} goBTC,
-        ${response.data.goETH} goETH,
-        ${response.data.goUSD} goUSD,
+        ${parseFloat(response.data.BTC).toFixed(2)} BTC, ${parseFloat(response.data.WBTC).toFixed(2)} WBTC, ${parseFloat(response.data.ETH).toFixed(2)} ETH, ${parseFloat(response.data.SIPLP).toFixed(2)} goUSD/USDC LP, ${parseFloat(response.data.USDC).toFixed(2)} USDC, ${parseFloat(response.data.goBTC).toFixed(2)} goBTC, ${parseFloat(response.data.goETH).toFixed(2)} goETH, ${parseFloat(response.data.goUSD).toFixed(2)} goUSD,
       `)
       console.log(response.data)
       return response.data
