@@ -1,28 +1,36 @@
 /*global AlgoSigner*/
 import React, {useRef, useState} from "react"
 import { Modal, Form, Button, Alert } from "react-bootstrap"
-import  optin  from "../../contract_interactions/optin"
 import appCall from "../../contract_interactions/noopCall"
 import { StyleSheet, css } from 'aphrodite'
 import { DOCTOR, PHARMACIST, INSURER } from "../../constants"
 
 export default function FormModal(props){
-  const userAccount = useRef()
   
   const [message, setMessage] = useState("")
   const [walletAddress, setWalletAddrss] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
-  const [errorAddress, setErrorAddress] = useState("")
   const [amount, setAmount] = useState(0)
 
   const accountAddress = localStorage.getItem("address")
   console.log(accountAddress)
 
+  const addressList = [
+    { name: "Doctor", value: DOCTOR },
+    {name: "Pharmacist", value: PHARMACIST},
+    {name: "Insurer", value: INSURER},
+  ]
 
 const styles = StyleSheet.create({
   error: {
     color: 'red'
+  },
+  select: {
+    width: '100%',
+    padding: '8px',
+    borderRadius: '4px'
   }
+
 })
 
  const  handleMessageChange =(e) => {
@@ -41,8 +49,6 @@ const handleAmountChange = e =>{
 }
 
   const handleTransfer = async () => {
-  //  const appOptin = await optin(getAddress)
-  //    console.log(appOptin)
     if(message === "") {
       setErrorMessage("Fields cannot be empty")
       return
@@ -50,20 +56,13 @@ const handleAmountChange = e =>{
     if(walletAddress === ""){
       setErrorMessage("Fields cannot be empty")
     }
-    if( walletAddress.length < 32){
-      setErrorAddress("Address should not be less than 32 characters")
-    }
-    else if(message !=="" || walletAddress.length === 32){
-      setErrorMessage("")
-      setErrorAddress("")
+ 
       if(accountAddress === INSURER){
           await appCall(accountAddress, walletAddress, message, amount)
       }else{
           await appCall(accountAddress, walletAddress, message, 0)
       }
       props.onHide()
-      // console.log(callApp)
-    }
   }
 
   return (
@@ -76,28 +75,19 @@ const handleAmountChange = e =>{
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Message</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="message"
-                autoFocus
-                onChange={handleMessageChange}
-                value={message}
-                required
-              />
-              <label className={css(styles.error)}>{errorMessage}</label>
+                <Form.Control
+                  as="textarea"
+                  placeholder="Leave a comment here"
+                  style={{ height: '100px' }}
+                  onChange={handleMessageChange}
+                  value={message}
+                  required
+                />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Recipient Wallet Address</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Receipient Address"
-                autoFocus
-                onChange={handleWalletAddressChange}
-                value = {walletAddress}
-                required
-              />
-              <label className={css(styles.error)}>{errorAddress}</label>
-            </Form.Group>
+            <Form.Label>Select Receipient Address</Form.Label>
+            <select className={css(styles.select)} name="addresses" id="addresses" onChange={handleWalletAddressChange} value={walletAddress}>
+            {addressList.map((item) => <option value={item.value}>{item.name}</option>)}
+            </select>
             { accountAddress === INSURER ? <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Amount</Form.Label>
               <Form.Control
@@ -108,19 +98,16 @@ const handleAmountChange = e =>{
                 value = {amount}
                 required
               />
-            </Form.Group> : null}
-            
-
-            <Button variant="primary" onClick={handleTransfer}>
-            {props.buttonText}
-          </Button>
+            </Form.Group> : null}       
           </Form>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="primary" onClick={handleTransfer}>
+            {props.buttonText}
+          </Button>
           <Button variant="secondary" onClick={props.onHide}>
             Close
           </Button>
-     
         </Modal.Footer>
       </Modal>
     </>
