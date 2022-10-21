@@ -1,5 +1,5 @@
 /*global AlgoSigner*/
-import React, {useRef, useState} from "react"
+import React, {useRef, useState, useEffect} from "react"
 import { Modal, Form, Button, Alert } from "react-bootstrap"
 import appCall from "../../contract_interactions/noopCall"
 import { StyleSheet, css } from 'aphrodite'
@@ -8,7 +8,7 @@ import { DOCTOR, PHARMACIST, INSURER } from "../../constants"
 export default function FormModal(props){
   
   const [message, setMessage] = useState("")
-  const [walletAddress, setWalletAddrss] = useState("")
+  const [walletAddress, setWalletAddrss] = useState(DOCTOR)
   const [errorMessage, setErrorMessage] = useState("")
   const [amount, setAmount] = useState(0)
 
@@ -16,7 +16,7 @@ export default function FormModal(props){
   console.log(accountAddress)
 
   const addressList = [
-    { name: "Doctor", value: DOCTOR },
+    {name: "Doctor", value: DOCTOR },
     {name: "Pharmacist", value: PHARMACIST},
     {name: "Insurer", value: INSURER},
   ]
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   }
 
 })
-
+  
  const  handleMessageChange =(e) => {
     setMessage(e.target.value);
     console.log(e.target.value)
